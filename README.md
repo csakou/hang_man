@@ -1,2 +1,2 @@
-# hang_man
-Simple hang man game written in Python
+# Hang Man
+Simple hang man game written in Python.
