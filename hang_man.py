@@ -3,12 +3,14 @@ import random
 import string
 from player import Player
 
+
 class Hang_Man:
-    def __init__(self, player):
+    def __init__(self):
         self.set_word()
         self.set_alphabet()
         self.set_player_lives()
-        self.set_characters_not_in_word()
+        self.set_characters_used()
+        self.set_player_characters_found()
 
     def set_word(self):
         try:
@@ -21,15 +23,28 @@ class Hang_Man:
 
     def set_alphabet(self):
         self.alphabet = list(string.ascii_uppercase)
+        print(self.alphabet)
 
     def set_player_lives(self):
         self.player_lives = self.get_word_length()
 
-    def set_characters_not_in_word(self):
-        self.characters_not_in_word = ['_']*24
+    def set_characters_used(self):
+        self.characters_not_in_word = ['_']*26
 
-    def update_characters_not_in_word(self, character, position):
+    def update_characters_used(self, character, position):
         self.characters_not_in_word[position] = character
+
+    def set_player_characters_found(self):
+        try:
+            self.player_characters_found = ['_' for i in range(self.get_word_length())]
+        except Exception as e:
+            print(e)
+
+    def update_player_characters_found(self, character, position):
+        try:
+            self.player_characters_found[position] = character
+        except Exception as e:
+            print(e)
 
     def get_word(self):
         return self.word
@@ -43,7 +58,7 @@ class Hang_Man:
     def get_player_lives(self):
         return self.player_lives
 
-    def get_characters_not_in_word(self):
+    def get_characters_used(self):
         return self.characters_not_in_word
 
     def get_character_pos_in_alphabet(self, character):
@@ -51,40 +66,55 @@ class Hang_Man:
             if character == char:
                 return offset
 
+    def get_player_characters_found(self):
+        return self.player_characters_found
+
     def decrease_player_lives(self):
-        if self.player_lives <= 0:
-            print(f'I am sorry {player.get_name()}, you are out of lives. Better luck next time!')
         self.player_lives -= 1
+
+    def player_choice(self):
+        print(f"{player.name}, please choose a letter of the alphabet:")
+        while True:
+            try:
+                choice = str(input("> ")).upper()
+                if len(choice) != 1 or choice.isdigit():
+                    raise ValueError
+                return choice
+            except ValueError:
+                print("You must choose a letter of the alphabet:")
 
     def check_choice(self, choice):
         if choice in self.get_word():
             for offset, item in enumerate(self.get_word()):
                 if choice == item:
-                    player.update_characters_found(item, offset)
+                    self.update_player_characters_found(item, offset)
         else:
             print("That letter is not in this word!")
-            self.update_characters_not_in_word(choice, self.get_character_pos_in_alphabet(choice))
             self.decrease_player_lives()
+        self.update_characters_used(choice, self.get_character_pos_in_alphabet(choice))
 
-    def display(self, characters_found):
-        print(characters_found)
+    def display(self, item):
+        print(item)
 
-    def start(self):
-        player.set_characters_found(self.get_word_length())
+    def play(self):
         print(f"Hello {player.get_name()}, let's play a game of 'Hang Man'!")
 
         while True:
-            self.display(player.get_characters_found())
-            self.display(self.get_characters_not_in_word())
-            self.check_choice(player.make_choice())
+            self.display(self.get_player_characters_found())
+            self.display(self.get_characters_used())
+            self.check_choice(self.player_choice())
+            self.check_state()
 
-    def restart(self):
-        pass
-
-    def end(self):
-        pass
+    def check_state(self):
+        if self.get_player_lives() <= 0:
+            print(f"Sorry {player.get_name()}, looks like you are out of lives")
+            print("Better luck next time!")
+            exit()
+        if ''.join(self.get_player_characters_found()) == self.get_word():
+            print(f"Congratulations! You have found the word '{self.get_word()}'")
+            exit()
 
 if __name__ == "__main__":
     player = Player()
-    game = Hang_Man(player)
-    game.start()
+    game = Hang_Man()
+    game.play()
