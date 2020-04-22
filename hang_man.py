@@ -1,4 +1,5 @@
 #!/home/csakou/Documents/Python/hang_man/venv/bin/python3
+import os
 import random
 import string
 from player import Player
@@ -20,16 +21,17 @@ class Hang_Man:
         except LookupError:
             print("Word list file does not exist!")
             exit(1)
+        finally:
+            word_list_file.close()
 
     def set_alphabet(self):
         self.alphabet = list(string.ascii_uppercase)
-        print(self.alphabet)
 
     def set_player_lives(self):
         self.player_lives = self.get_word_length()
 
     def set_characters_used(self):
-        self.characters_not_in_word = ['_']*26
+        self.characters_not_in_word = ['']*26
 
     def update_characters_used(self, character, position):
         self.characters_not_in_word[position] = character
@@ -93,21 +95,28 @@ class Hang_Man:
             self.decrease_player_lives()
         self.update_characters_used(choice, self.get_character_pos_in_alphabet(choice))
 
-    def display(self, item):
-        print(item)
+    def display_word(self, item):
+        print('  '.join(item))
+
+    def display_letters_used(self, item):
+        print(''.join(set(item) & set(string.ascii_uppercase)))
+
+    def clear_terminal(self):
+        os.system('clear')
 
     def play(self):
         print(f"Hello {player.get_name()}, let's play a game of 'Hang Man'!")
 
         while True:
-            self.display(self.get_player_characters_found())
-            self.display(self.get_characters_used())
+            self.display_word(self.get_player_characters_found())
+            self.display_word(self.get_characters_used())
             self.check_choice(self.player_choice())
+            self.clear_terminal()
             self.check_state()
 
     def check_state(self):
         if self.get_player_lives() <= 0:
-            print(f"Sorry {player.get_name()}, looks like you are out of lives")
+            print(f"Sorry {player.get_name()}, looks like you are out of guesses.")
             print("Better luck next time!")
             exit()
         if ''.join(self.get_player_characters_found()) == self.get_word():
