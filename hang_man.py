@@ -1,9 +1,9 @@
 #!/home/csakou/Documents/Python/hang_man/venv/bin/python3
 import os
+import time
 import random
 import string
 from player import Player
-
 
 class Hang_Man:
     def __init__(self):
@@ -28,13 +28,13 @@ class Hang_Man:
         self.alphabet = list(string.ascii_uppercase)
 
     def set_player_lives(self):
-        self.player_lives = self.get_word_length()
+        self.player_lives = self.get_word_length() + 2
 
     def set_characters_used(self):
-        self.characters_not_in_word = ['']*26
+        self.characters_used = ['']*26
 
     def update_characters_used(self, character, position):
-        self.characters_not_in_word[position] = character
+        self.characters_used[position] = character
 
     def set_player_characters_found(self):
         try:
@@ -61,7 +61,7 @@ class Hang_Man:
         return self.player_lives
 
     def get_characters_used(self):
-        return self.characters_not_in_word
+        return self.characters_used
 
     def get_character_pos_in_alphabet(self, character):
         for offset, char in enumerate(self.get_alphabet()):
@@ -79,11 +79,11 @@ class Hang_Man:
         while True:
             try:
                 choice = str(input("> ")).upper()
-                if len(choice) != 1 or choice.isdigit():
+                if len(choice) != 1 or choice.isdigit() or choice in self.get_characters_used():
                     raise ValueError
                 return choice
             except ValueError:
-                print("You must choose a letter of the alphabet:")
+                print("You must choose a letter of the alphabet you have not used:")
 
     def check_choice(self, choice):
         if choice in self.get_word():
@@ -91,28 +91,24 @@ class Hang_Man:
                 if choice == item:
                     self.update_player_characters_found(item, offset)
         else:
-            print("That letter is not in this word!")
             self.decrease_player_lives()
         self.update_characters_used(choice, self.get_character_pos_in_alphabet(choice))
 
-    def display_word(self, item):
-        print('  '.join(item))
+    def display_word(self):
+        print(' '.join(self.get_player_characters_found()))
 
-    def display_letters_used(self, item):
-        print(''.join(set(item) & set(string.ascii_uppercase)))
+    def display_characters_used(self):
+        characters_used = [i for i in self.get_characters_used() if i in list(string.ascii_uppercase)]
+        print(''.join(characters_used))
 
-    def clear_terminal(self):
+    def display_lives(self):
+        print("Lives left: {}".format('#'*self.get_player_lives()))
+
+    def update_display(self):
         os.system('clear')
-
-    def play(self):
-        print(f"Hello {player.get_name()}, let's play a game of 'Hang Man'!")
-
-        while True:
-            self.display_word(self.get_player_characters_found())
-            self.display_word(self.get_characters_used())
-            self.check_choice(self.player_choice())
-            self.clear_terminal()
-            self.check_state()
+        self.display_word()
+        self.display_characters_used()
+        self.display_lives()
 
     def check_state(self):
         if self.get_player_lives() <= 0:
@@ -122,6 +118,14 @@ class Hang_Man:
         if ''.join(self.get_player_characters_found()) == self.get_word():
             print(f"Congratulations! You have found the word '{self.get_word()}'")
             exit()
+
+    def play(self):
+        print(f"Hello {player.get_name()}, let's play a game of 'Hang Man'!")
+
+        while True:
+            self.update_display()
+            self.check_choice(self.player_choice())
+            self.check_state()
 
 if __name__ == "__main__":
     player = Player()
