@@ -1,6 +1,5 @@
 #!/home/csakou/Documents/Python/hang_man/venv/bin/python3
 import os
-import time
 import random
 import string
 from player import Player
@@ -28,7 +27,7 @@ class Hang_Man:
         self.alphabet = list(string.ascii_uppercase)
 
     def set_player_lives(self):
-        self.player_lives = self.get_word_length() + 2
+        self.player_lives = self.get_word_length()
 
     def set_characters_used(self):
         self.characters_used = ['']*26
@@ -112,22 +111,22 @@ class Hang_Man:
 
     def check_state(self):
         if self.get_player_lives() <= 0:
-            print(f"Sorry {player.get_name()}, looks like you are out of guesses.")
-            print("Better luck next time!")
+            print(f'Sorry {player.get_name()}, looks like you are out of guesses.')
+            print('Better luck next time!')
             exit()
         if ''.join(self.get_player_characters_found()) == self.get_word():
-            print(f"Congratulations! You have found the word '{self.get_word()}'")
+            print(f'Congratulations! You have found the word "{self.get_word()}".')
             exit()
 
     def play(self):
-        print(f"Hello {player.get_name()}, let's play a game of 'Hang Man'!")
+        print(f"Hello {player.get_name()}, let's play a game of Hang Man!")
 
         while True:
             self.update_display()
             self.check_choice(self.player_choice())
             self.check_state()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     player = Player()
     game = Hang_Man()
     game.play()

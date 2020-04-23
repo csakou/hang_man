@@ -1,7 +1,5 @@
 #!/home/csakou/Documents/Python/hang_man/venv/bin/python3
 
-
-
 class Player:
     def __init__(self):
         self.set_name()
