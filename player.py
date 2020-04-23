@@ -5,7 +5,7 @@ class Player:
         self.set_name()
 
     def set_name(self):
-        print("Hello player. Please enter your name. It must have 1-16 characters:")
+        print('Hello player. Please enter your name. It must have 1-16 characters:')
         while True:
             try:
                 self.name = input("> ")
@@ -13,7 +13,7 @@ class Player:
                     raise ValueError
                 break
             except ValueError:
-                print("Your name must be in between 1-16 characters:")
+                print('Your name must be in between 1-16 characters:')
 
     def get_name(self):
         return self.name

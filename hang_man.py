@@ -18,7 +18,7 @@ class Hang_Man:
                 word_list = word_list_file.read().split('\n')
                 self.word = random.choice(word_list).upper()
         except LookupError:
-            print("Word list file does not exist!")
+            print('Word list file does not exist!')
             exit(1)
         finally:
             word_list_file.close()
@@ -74,7 +74,7 @@ class Hang_Man:
         self.player_lives -= 1
 
     def player_choice(self):
-        print(f"{player.name}, please choose a letter of the alphabet:")
+        print(f'{player.name}, please choose a letter of the alphabet:')
         while True:
             try:
                 choice = str(input("> ")).upper()
@@ -82,7 +82,7 @@ class Hang_Man:
                     raise ValueError
                 return choice
             except ValueError:
-                print("You must choose a letter of the alphabet you have not used:")
+                print('You must choose a letter of the alphabet you have not used:')
 
     def check_choice(self, choice):
         if choice in self.get_word():
@@ -101,7 +101,7 @@ class Hang_Man:
         print(''.join(characters_used))
 
     def display_lives(self):
-        print("Lives left: {}".format('#'*self.get_player_lives()))
+        print('Lives left: {}'.format('#'*self.get_player_lives()))
 
     def update_display(self):
         os.system('clear')
