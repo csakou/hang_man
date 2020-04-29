@@ -6,11 +6,12 @@ from player import Player
 
 class Hang_Man:
     def __init__(self):
+        self.player = Player()
         self.set_word()
-        self.set_alphabet()
-        self.set_player_lives()
-        self.set_characters_used()
-        self.set_player_characters_found()
+        self.alphabet = list(string.ascii_uppercase)
+        self.player_lives = self.get_word_length()
+        self.characters_used = ['']*26
+        self.player_characters_found = ['_' for i in range(self.get_word_length())]
 
     def set_word(self):
         try:
@@ -23,23 +24,8 @@ class Hang_Man:
         finally:
             word_list_file.close()
 
-    def set_alphabet(self):
-        self.alphabet = list(string.ascii_uppercase)
-
-    def set_player_lives(self):
-        self.player_lives = self.get_word_length()
-
-    def set_characters_used(self):
-        self.characters_used = ['']*26
-
     def update_characters_used(self, character, position):
         self.characters_used[position] = character
-
-    def set_player_characters_found(self):
-        try:
-            self.player_characters_found = ['_' for i in range(self.get_word_length())]
-        except Exception as e:
-            print(e)
 
     def update_player_characters_found(self, character, position):
         try:
@@ -74,7 +60,7 @@ class Hang_Man:
         self.player_lives -= 1
 
     def player_choice(self):
-        print(f'{player.name}, please choose a letter of the alphabet:')
+        print(f'{self.player.name}, please choose a letter of the alphabet:')
         while True:
             try:
                 choice = str(input("> ")).upper()
@@ -111,7 +97,7 @@ class Hang_Man:
 
     def check_state(self):
         if self.get_player_lives() <= 0:
-            print(f'Sorry {player.get_name()}, looks like you are out of guesses.')
+            print(f'Sorry {self.player.get_name()}, looks like you are out of guesses.')
             print('Better luck next time!')
             exit()
         if ''.join(self.get_player_characters_found()) == self.get_word():
@@ -119,7 +105,7 @@ class Hang_Man:
             exit()
 
     def play(self):
-        print(f"Hello {player.get_name()}, let's play a game of Hang Man!")
+        print(f"Hello {self.player.get_name()}, let's play a game of Hang Man!")
 
         while True:
             self.update_display()
@@ -127,6 +113,5 @@ class Hang_Man:
             self.check_state()
 
 if __name__ == '__main__':
-    player = Player()
     game = Hang_Man()
     game.play()
