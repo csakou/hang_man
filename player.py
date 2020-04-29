@@ -23,8 +23,8 @@ class Player:
         Initializes Player object and requests the name of the player
         """
         print("Hello player, please input your name. It must be between 1-16 characters:")
-        name = ''
-        while name == '':
+        name = None
+        while name == None:
             name = self.validate_name(input('> '))
         self.name = name
 
@@ -40,7 +40,7 @@ class Player:
         """
         if len(name) <= 0 or len(name) > 16:
             print('Your name must be in between 1-16 characters:')
-            return ''
+            return None
         return name
 
     def get_name(self):

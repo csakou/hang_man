@@ -139,17 +139,17 @@ class Hang_Man:
         if self.player_lives <= 0:
             print(f'Sorry {self.player.get_name()}, looks like you are out of guesses.')
             print('Better luck next time!')
-            return 0
+            return 1
         if ''.join(self.get_player_letters_found()) == self.get_word():
             print(f'Congratulations! You have found the word "{self.get_word()}".')
-            return 0
-        return 1
+            return 1
+        return 0
 
     def play(self):
         state = 1
         print(f"Hello {self.player.get_name()}, let's play a game of Hang Man!")
 
-        while state != 0:
+        while state == 0:
             self.update_display()
             self.check_choice(self.player_choice())
             state = self.check_state()
