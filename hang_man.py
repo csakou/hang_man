@@ -1,4 +1,7 @@
-#!/home/csakou/Documents/Python/hang_man/venv/bin/python3
+"""
+
+"""
+
 import os
 import random
 import string
@@ -9,9 +12,9 @@ class Hang_Man:
         self.player = Player()
         self.set_word()
         self.alphabet = list(string.ascii_uppercase)
-        self.player_lives = self.get_word_length()
+        self.player_lives = len(self.get_word())
         self.characters_used = ['']*26
-        self.player_characters_found = ['_' for i in range(self.get_word_length())]
+        self.player_characters_found = ['_' for i in range(len(self.get_word()))]
 
     def set_word(self):
         try:
@@ -28,28 +31,13 @@ class Hang_Man:
         self.characters_used[position] = character
 
     def update_player_characters_found(self, character, position):
-        try:
-            self.player_characters_found[position] = character
-        except Exception as e:
-            print(e)
+        self.player_characters_found[position] = character
 
     def get_word(self):
         return self.word
 
-    def get_alphabet(self):
-        return self.alphabet
-
-    def get_word_length(self):
-        return len(self.get_word())
-
-    def get_player_lives(self):
-        return self.player_lives
-
-    def get_characters_used(self):
-        return self.characters_used
-
     def get_character_pos_in_alphabet(self, character):
-        for offset, char in enumerate(self.get_alphabet()):
+        for offset, char in enumerate(self.alphabet):
             if character == char:
                 return offset
 
@@ -64,7 +52,7 @@ class Hang_Man:
         while True:
             try:
                 choice = str(input("> ")).upper()
-                if len(choice) != 1 or choice.isdigit() or choice in self.get_characters_used():
+                if len(choice) != 1 or choice.isdigit() or choice in self.characters_used:
                     raise ValueError
                 return choice
             except ValueError:
@@ -83,11 +71,11 @@ class Hang_Man:
         print(' '.join(self.get_player_characters_found()))
 
     def display_characters_used(self):
-        characters_used = [i for i in self.get_characters_used() if i in list(string.ascii_uppercase)]
+        characters_used = [i for i in self.characters_used if i in list(string.ascii_uppercase)]
         print(''.join(characters_used))
 
     def display_lives(self):
-        print('Lives left: {}'.format('#'*self.get_player_lives()))
+        print('Lives left: {}'.format('#'*self.player_lives))
 
     def update_display(self):
         os.system('clear')
@@ -96,21 +84,23 @@ class Hang_Man:
         self.display_lives()
 
     def check_state(self):
-        if self.get_player_lives() <= 0:
+        if self.player_lives <= 0:
             print(f'Sorry {self.player.get_name()}, looks like you are out of guesses.')
             print('Better luck next time!')
-            exit()
+            return 0
         if ''.join(self.get_player_characters_found()) == self.get_word():
             print(f'Congratulations! You have found the word "{self.get_word()}".')
-            exit()
+            return 0
+        return 1
 
     def play(self):
+        state = 1
         print(f"Hello {self.player.get_name()}, let's play a game of Hang Man!")
 
-        while True:
+        while state != 0:
             self.update_display()
             self.check_choice(self.player_choice())
-            self.check_state()
+            state = self.check_state()
 
 if __name__ == '__main__':
     game = Hang_Man()
