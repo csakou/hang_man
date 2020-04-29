@@ -74,8 +74,8 @@ class Hang_Man:
             with open('word_list.txt', 'r', newline='\n', encoding='utf-8') as word_list_file:
                 word_list = word_list_file.read().split('\n')
                 word = random.choice(word_list).upper()
-        except FileNotFoundError:
-            print('Word list file does not exist!')
+        except:
+            print('Something went wrong with the word list file provided.')
             sys.exit(1)
         finally:
             word_list_file.close()
